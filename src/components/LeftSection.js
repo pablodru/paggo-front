@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { styled } from "styled-components";
 import CheckIcon from "./CheckIcon";
 import axios from "axios";
+import InvoiceContext from "@/contexts/invoiceContext";
 
 export default function LeftSection() {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [preview, setPreview] = useState(null);
+	const { setUploadResponse } = useContext(InvoiceContext);
 
 	const handleImageChange = (event) => {
 		const file = event.target.files[0];
@@ -19,6 +21,7 @@ export default function LeftSection() {
 	};
 
 	const sendImage = async (image) => {
+		
 		const URL = `${process.env.NEXT_PUBLIC_API_URL}/upload/image`;
 		const formData = new FormData();
 		formData.append("file", image);
@@ -26,10 +29,8 @@ export default function LeftSection() {
 		const headers = { 'Authorization': 'Bearer token' };
 
 		try {
-			console.log('Sending image to:', URL);
-			console.log('FormData:', formData);
 			const response = await axios.post(URL, formData, { headers });
-			console.log('Response:', response.data);
+			setUploadResponse(response.data);
 		} catch (error) {
 			console.error('Error uploading image:', error);
 		}

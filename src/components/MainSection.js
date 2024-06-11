@@ -17,7 +17,7 @@ const ScMain = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 85%;
-	min-height: 800px;
+	min-height: 801px;
 	margin: 130px auto 50px auto;
 	border-radius: 8px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
