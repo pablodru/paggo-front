@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { styled } from "styled-components";
-//import CheckIcon from "../../public/checkIcon.svg";
 import CheckIcon from "./CheckIcon";
+import axios from "axios";
 
 export default function LeftSection() {
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -18,34 +18,27 @@ export default function LeftSection() {
 		reader.readAsDataURL(file);
 	};
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		if (!selectedImage) return;
-
+	const sendImage = async (image) => {
+		const URL = `${process.env.NEXT_PUBLIC_API_URL}/upload/image`;
 		const formData = new FormData();
-		formData.append("image", selectedImage);
+		formData.append("file", image);
+
+		const headers = { 'Authorization': 'Bearer token' };
 
 		try {
-			const response = await fetch("/api/upload", {
-				method: "POST",
-				body: formData,
-			});
-
-			if (response.ok) {
-				alert("Imagem enviada com sucesso!");
-			} else {
-				alert("Falha ao enviar imagem");
-			}
+			console.log('Sending image to:', URL);
+			console.log('FormData:', formData);
+			const response = await axios.post(URL, formData, { headers });
+			console.log('Response:', response.data);
 		} catch (error) {
-			console.error("Erro ao enviar imagem:", error);
-			alert("Erro ao enviar imagem");
+			console.error('Error uploading image:', error);
 		}
 	};
 
 	return (
 		<ScLeftSection>
 			<p>Turn your invoice image into text</p>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={(e) => { e.preventDefault(); sendImage(selectedImage); }}>
 				{!preview && (
 					<ScFileInput>
 						<label htmlFor="fileUpload">Select image</label>
@@ -59,7 +52,7 @@ export default function LeftSection() {
 				)}
 				{preview && <ScImagePreview src={preview} alt="Preview" />}
 				{preview && <CheckIcon />}
-				{preview && <ScButton disable={!preview} preview={preview} type="submit">
+				{preview && <ScButton disabled={!preview} type="submit">
 					Upload
 				</ScButton>}
 			</form>
@@ -73,6 +66,7 @@ const ScLeftSection = styled.div`
 	padding: 60px 50px;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 100px;
 
 	p:first-child {
