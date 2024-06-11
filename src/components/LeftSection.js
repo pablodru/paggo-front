@@ -7,7 +7,7 @@ import InvoiceContext from "@/contexts/invoiceContext";
 export default function LeftSection() {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [preview, setPreview] = useState(null);
-	const { setUploadResponse } = useContext(InvoiceContext);
+	const { authToken, setUploadResponse } = useContext(InvoiceContext);
 
 	const handleImageChange = (event) => {
 		const file = event.target.files[0];
@@ -26,7 +26,7 @@ export default function LeftSection() {
 		const formData = new FormData();
 		formData.append("file", image);
 
-		const headers = { 'Authorization': 'Bearer token' };
+		const headers = { 'Authorization': `Bearer ${authToken}}` };
 
 		try {
 			const response = await axios.post(URL, formData, { headers });

@@ -1,5 +1,5 @@
 // components/Header.js
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
 	auth,
 	provider,
@@ -9,16 +9,18 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { styled } from "styled-components";
 import axios from "axios";
+import InvoiceContext from "@/contexts/invoiceContext";
 
 export default function Header() {
 	const [user, setUser] = useState(null);
+	const {setAuthToken} = useContext(InvoiceContext);
 
 	async function signIn (email, token) {
 		const URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`
 		const body = { email, token };
 		axios
 			.post(URL, body)
-			.then(res => console.log(res.data))
+			.then(res => {setAuthToken(token)})
 			.catch(err => console.log(err));
 	}
 
