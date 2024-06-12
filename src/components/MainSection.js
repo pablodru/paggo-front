@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import { styled } from "styled-components";
 import LeftSection from "./LeftSection";
 import RightSection from "./RightSection";
-import axios from "axios";
+import InvoiceContext from "@/contexts/invoiceContext";
 
 export default function MainSection() {
+	const { authToken } = useContext(InvoiceContext);
 	return (
 		<ScMain>
 			<LeftSection />
@@ -29,4 +31,11 @@ const ScLine = styled.div`
 	width: 2px;
 	height: 600px;
 	background-color: #f39c12;
+`;
+
+const ScSignInMessage = styled.p`
+	margin: auto auto;
+	font-size: 24px;
+	font-weight: bold;
+	color: #1f3a93;
 `;

@@ -23,7 +23,7 @@ export default function RightSection() {
 	return (
 		<ScRightSection>
 			<p>Your text below</p>
-			<p>"No upload yet"</p>
+			<p>No upload yet</p>
 		</ScRightSection>
 	);
 }
