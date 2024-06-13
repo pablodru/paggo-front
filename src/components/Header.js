@@ -26,6 +26,8 @@ const ScHeader = styled.div`
 	width: 100%;
 	height: 80px;
 	background-color: #1f3a93;
+	position:fixed;
+	top:0;
 
 	display: flex;
 	justify-content: space-between;
