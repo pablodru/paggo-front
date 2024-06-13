@@ -46,14 +46,15 @@ npm run dev
 ```
 3. A aplicação estará disponível em `http://localhost:3000`.
 
+## Tecnologias
 
-
-
-
-
-
-
-
+1. Next v14.2.3;
+2. Node v18.17.0;
+3. Firebase v10.12.2;
+4. Styled-Components v6.1.11;
+5. SweetAlert2 v11.11.1;
+6. Axios v1.7.2;
+7. Jest v29.7.0;
 
 
 
