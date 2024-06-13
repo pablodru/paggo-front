@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { styled } from "styled-components";
-//import CheckIcon from "../../public/checkIcon.svg";
 import CheckIcon from "./CheckIcon";
+import axios from "axios";
+import InvoiceContext from "@/contexts/invoiceContext";
+import Swal from "sweetalert2";
 
 export default function LeftSection() {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [preview, setPreview] = useState(null);
+	const { authToken, setUploadResponse, uploadResponse } =
+		useContext(InvoiceContext);
+
+	useEffect(() => {
+		if (authToken === null) {
+			setPreview(null);
+			setSelectedImage(null);
+		}
+	}, [authToken]);
 
 	const handleImageChange = (event) => {
 		const file = event.target.files[0];
@@ -18,37 +29,53 @@ export default function LeftSection() {
 		reader.readAsDataURL(file);
 	};
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		if (!selectedImage) return;
-
+	const sendImage = async (image) => {
+		const URL = `${process.env.NEXT_PUBLIC_API_URL}/upload/image`;
 		const formData = new FormData();
-		formData.append("image", selectedImage);
+		formData.append("file", image);
+
+		const headers = { Authorization: `Bearer ${authToken}` };
 
 		try {
-			const response = await fetch("/api/upload", {
-				method: "POST",
-				body: formData,
-			});
-
-			if (response.ok) {
-				alert("Imagem enviada com sucesso!");
-			} else {
-				alert("Falha ao enviar imagem");
-			}
+			const response = await axios.post(URL, formData, { headers });
+			setUploadResponse(response.data);
 		} catch (error) {
-			console.error("Erro ao enviar imagem:", error);
-			alert("Erro ao enviar imagem");
+			console.error("Error uploading image:", error);
 		}
+	};
+
+	const handleLabelClick = (event) => {
+		if (!authToken) {
+			event.preventDefault();
+			Swal.fire({
+				title: "Error!",
+				text: "You need to sign-in to upload an image.",
+				icon: "error",
+				confirmButtonText: "OK",
+			});
+		}
+	};
+
+	const resetPageState = () => {
+		setUploadResponse(null);
+		setPreview(null);
+		setSelectedImage(null);
 	};
 
 	return (
 		<ScLeftSection>
 			<p>Turn your invoice image into text</p>
-			<form onSubmit={handleSubmit}>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					sendImage(selectedImage);
+				}}
+			>
 				{!preview && (
 					<ScFileInput>
-						<label htmlFor="fileUpload">Select image</label>
+						<label htmlFor="fileUpload" onClick={(e) => handleLabelClick(e)}>
+							Select image
+						</label>
 						<input
 							id="fileUpload"
 							type="file"
@@ -59,9 +86,16 @@ export default function LeftSection() {
 				)}
 				{preview && <ScImagePreview src={preview} alt="Preview" />}
 				{preview && <CheckIcon />}
-				{preview && <ScButton disable={!preview} preview={preview} type="submit">
-					Upload
-				</ScButton>}
+				{preview && !uploadResponse && (
+					<ScButton disabled={!preview} type="submit">
+						Upload
+					</ScButton>
+				)}
+				{preview && (
+					<ScClearButton onClick={() => resetPageState()}>
+						Clear all
+					</ScClearButton>
+				)}
 			</form>
 		</ScLeftSection>
 	);
@@ -73,6 +107,7 @@ const ScLeftSection = styled.div`
 	padding: 60px 50px;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 100px;
 
 	p:first-child {
@@ -110,10 +145,24 @@ const ScImagePreview = styled.img`
 	margin-top: 10px;
 	border: 2px solid #ddd;
 	border-radius: 6px;
-    object-fit: contain;
+	object-fit: contain;
 `;
 
 const ScButton = styled.button`
+	padding: 10px 20px;
+	background-color: #3498db;
+	color: white;
+	font-size: 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #2980b9;
+	}
+`;
+
+const ScClearButton = styled.div`
 	padding: 10px 20px;
 	background-color: #3498db;
 	color: white;
