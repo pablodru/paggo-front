@@ -1,11 +1,9 @@
-import ResetStyle from "@/styles/ResetStyle";
+import Header from '@/components/Header';
 
-function App() {
-    return (
-        <>
-            <p>Oi</p>
-        </>
-    )
+export default function Home() {
+  return (
+    <>
+      <Header />
+    </>
+  );
 }
-
-export default App;
