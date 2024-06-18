@@ -5,6 +5,7 @@ const InvoiceContext = createContext();
 export const InvoiceProvider = ({ children }) => {
     const [uploadResponse, setUploadResponse] = useState(null);
     const [authToken, setAuthToken] = useState(null);
+    const [uploadLoading, setUploadLoading] = useState(false);
 
     const resetAppState = () => {
         setAuthToken(null);
@@ -12,7 +13,7 @@ export const InvoiceProvider = ({ children }) => {
       };
 
     return (
-        <InvoiceContext.Provider value={{ uploadResponse, setUploadResponse, authToken, setAuthToken, resetAppState }}>
+        <InvoiceContext.Provider value={{ uploadResponse, setUploadResponse, authToken, setAuthToken, resetAppState, setUploadLoading, uploadLoading }}>
             {children}
         </InvoiceContext.Provider>
     );

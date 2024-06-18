@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 export default function LeftSection() {
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [preview, setPreview] = useState(null);
-	const { authToken, setUploadResponse, uploadResponse } =
+	const { authToken, setUploadResponse, uploadResponse, setUploadLoading } =
 		useContext(InvoiceContext);
 
 	useEffect(() => {
@@ -33,16 +33,26 @@ export default function LeftSection() {
 		const URL = `${process.env.NEXT_PUBLIC_API_URL}/upload/image`;
 		const formData = new FormData();
 		formData.append("file", image);
-
+	
 		const headers = { Authorization: `Bearer ${authToken}` };
-
+	
 		try {
+			setUploadLoading(true);
 			const response = await axios.post(URL, formData, { headers });
 			setUploadResponse(response.data);
 		} catch (error) {
 			console.error("Error uploading image:", error);
+			Swal.fire({
+				title: "Error!",
+				text: "It was an error uploading your invoice.",
+				icon: "error",
+				confirmButtonText: "OK",
+			});
+		} finally {
+			setUploadLoading(false);
 		}
 	};
+	
 
 	const handleLabelClick = (event) => {
 		if (!authToken) {

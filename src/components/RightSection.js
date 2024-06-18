@@ -3,10 +3,10 @@ import { useContext } from "react";
 import InvoiceContext from "@/contexts/invoiceContext";
 
 export default function RightSection() {
-	const { uploadResponse } = useContext(InvoiceContext);
+	const { uploadResponse, uploadLoading } = useContext(InvoiceContext);
+
 	if (uploadResponse) {
 		const textArray = uploadResponse.ocrText.split("\n");
-		console.log(textArray);
 
 		return (
 			<ScRightSection>
@@ -19,11 +19,12 @@ export default function RightSection() {
 			</ScRightSection>
 		);
 	}
-
 	return (
 		<ScRightSection>
 			<p>Your text below</p>
-			<p>No upload yet</p>
+			{/* <p>No upload yet</p> */}
+			{!uploadLoading && <p>No upload yet</p>}
+			{uploadLoading && <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />}
 		</ScRightSection>
 	);
 }
@@ -46,6 +47,11 @@ const ScRightSection = styled.div`
 	p:last-child {
 		font-size: 16px;
 		line-height: 1.5;
+	}
+
+	img {
+		width: 60%;
+		height: 40%;
 	}
 `;
 
