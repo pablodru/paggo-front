@@ -12,8 +12,8 @@ export default function RightSection() {
 			<ScRightSection>
 				<p>Your text below</p>
 				<ScWords>
-					{textArray.map((word) => (
-						<ScWordBox>{word}</ScWordBox>
+					{textArray.map((word, i) => (
+						<ScWordBox key={i}>{word}</ScWordBox>
 					))}
 				</ScWords>
 			</ScRightSection>

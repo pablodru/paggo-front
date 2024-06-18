@@ -37,7 +37,7 @@ export default function Header() {
 		});
 
 		return () => unsubscribe();
-	}, []);
+	}, [signIn]);
 
 	const handleSignOut = async () => {
 		try {
